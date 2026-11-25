@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# The database is created automatically when the app runs
+*.db
+
+# Editor / system files
+.vscode/
+.idea/
+.DS_Store
+*.log
+.env
