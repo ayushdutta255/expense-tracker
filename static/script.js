@@ -1,11 +1,8 @@
-// Small interactions for PennyWise (pop-up forms and delete confirmation)
-
 const addDialog = document.getElementById("addDialog");
 const budgetDialog = document.getElementById("budgetDialog");
 const txForm = document.getElementById("txForm");
-const addAction = txForm.action; // where the "Add" form posts to
+const addAction = txForm.action;
 
-// Close a pop-up with its X button or by tapping outside it
 [addDialog, budgetDialog].forEach(function (dialog) {
   dialog.addEventListener("click", function (event) {
     if (event.target === dialog) dialog.close();
@@ -15,14 +12,13 @@ const addAction = txForm.action; // where the "Add" form posts to
   });
 });
 
-// Show the categories that match Expense / Income
 function showCategories() {
   const kind = document.querySelector("input[name=kind]:checked").value;
   document.querySelectorAll(".chips[data-kind]").forEach(function (group) {
     const visible = group.dataset.kind === kind;
     group.hidden = !visible;
     group.querySelectorAll("input").forEach(function (input) { input.disabled = !visible; });
-    // make sure one category is always selected in the visible group
+
     if (visible && !group.querySelector("input:checked")) {
       group.querySelector("input").checked = true;
     }
@@ -32,7 +28,6 @@ document.querySelectorAll("input[name=kind]").forEach(function (radio) {
   radio.onchange = showCategories;
 });
 
-// "+ Add" opens an empty form
 document.getElementById("openAdd").onclick = function () {
   txForm.reset();
   txForm.action = addAction;
@@ -41,7 +36,6 @@ document.getElementById("openAdd").onclick = function () {
   addDialog.showModal();
 };
 
-// The pencil button opens the same form, already filled in
 document.querySelectorAll(".edit").forEach(function (button) {
   button.onclick = function () {
     const data = button.dataset;
@@ -61,7 +55,6 @@ document.querySelectorAll(".edit").forEach(function (button) {
 
 document.getElementById("openBudget").onclick = function () { budgetDialog.showModal(); };
 
-// Ask before deleting
 document.querySelectorAll(".delete-form").forEach(function (form) {
   form.onsubmit = function () { return confirm("Delete this transaction?"); };
 });
