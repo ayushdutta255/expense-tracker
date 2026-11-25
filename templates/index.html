@@ -1,0 +1,60 @@
+P PennyWise
+{% with messages = get_flashed_messages(with_categories=true) %} {% for category, message in messages %}
+{{ message }}
+
+{% endfor %} {% endwith %}
+Available balance
+
+{{ '-' if balance < 0 }}{{ currency }}{{ balance|abs|money }}
+
+Total income{{ currency }}{{ total_income|money }}
+Total expenses{{ currency }}{{ total_expenses|money }}
+{{ month_name }}
+{% if has_prev %} ‹ {% else %} ‹ {% endif %} {% if has_next %} › {% else %} › {% endif %}
+Monthly budget
+{{ 'Change budget' if budget is not none else 'Set budget' }}
+{% if budget is not none %}
+Budget{{ currency }}{{ budget|money }}
+Spent{{ currency }}{{ month_expenses|money }}
+Remaining{{ '-' if budget_remaining < 0 }}{{ currency }}{{ budget_remaining|abs|money }}
+{% if budget_remaining < 0 %}Over budget: {{ budget_percent }}% used{% else %}{{ budget_percent }}% of the budget used{% endif %} {% else %}
+No budget yet. Set how much you plan to spend each month.
+
+{% endif %}
+Spending by category
+{% if categories_spent %}
+Spent{{ currency }}{{ month_expenses|money }}
+{% for c in categories_spent %}
+{{ c.emoji }} {{ c.name }} {{ currency }}{{ c.total|money }}
+{% endfor %}
+{% else %}
+No expenses in this month yet.
+
+{% endif %}
+Spending Snapshot
+Highest spending category {% if top_category %}{{ top_category.emoji }} {{ top_category.name }}{% else %}None yet{% endif %}
+Total monthly expenses{{ currency }}{{ month_expenses|money }}
+Remaining budget {% if budget is not none %} {{ '-' if budget_remaining < 0 }}{{ currency }}{{ budget_remaining|abs|money }} {% else %}Not set{% endif %}
+Monthly report
+Income{{ currency }}{{ month_income|money }}
+Expenses{{ currency }}{{ month_expenses|money }}
+Remaining balance {{ '-' if month_balance < 0 }}{{ currency }}{{ month_balance|abs|money }}
+Transaction history
+{{ transactions|length }} shown
+Search & filter
+{% if transactions %}
+{% for t in transactions %} {% set c = all_categories.get(t.category, expense_categories['Other']) %}
+{{ c.emoji }} {{ t.note or t.category }} {% if t.kind == 'income' %} +{{ currency }}{{ t.amount|money }} {% else %} -{{ currency }}{{ t.amount|money }} {% endif %} {{ t.category }} {{ 'Income' if t.kind == 'income' else 'Expense' }} {{ t.spent_on|pretty_date }}
+✎
+×
+{% endfor %}
+{% elif filters_used %}
+No transactions match.
+Try different filters.
+
+{% else %}
+No transactions yet.
+Tap Add to record your first income or expense.
+
+{% endif %}
++ Add
